@@ -11,6 +11,8 @@ interface Session {
 }
 const sessions = new Map<string, Session>();
 
+const validSessions = new Set<string>();
+
 export async function LoginMiddleware(ctx: Context) {
     const session = generateSessionToken();
     const realm = "Login to INTELBRAS EMULATOR 2000";
@@ -67,6 +69,7 @@ export async function LoginMiddleware(ctx: Context) {
 
         // se estiver certo, retorna um keepAliveInterval: 30
         // add session to map, etc (ctx.state?)
+        validSessions.add(req_body.session!);
         const response: RPC2Response<Record<string, number>> = {
             result: true,
             params: { keepAliveInterval: 30 },
