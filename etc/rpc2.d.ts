@@ -1,7 +1,5 @@
-// ok, pra quê transformar method em generic
-
-export interface RPC2Request<Method, Params> {
-    method: Method;
+export interface RPC2Request<Params> {
+    method: string;
     params: Params;
     id: number;
     session: string;
@@ -18,9 +16,11 @@ export interface RPC2Response<Params> {
 // test: login
 // a gente não precisa sair tipando requests, né? tem mais o que fazer
 
-type LoginRequest = RPC2Request<"global.login", {
+interface LoginParams {
     userName: string;
     password: string;
     clientType: "Web3.0";
     loginType: "Direct";
-}>;
+}
+
+type LoginRequest = RPC2Request<LoginParams>;
