@@ -1,6 +1,6 @@
 import { Context } from "@oak/oak";
 import { generateSessionToken, makePWHash } from "./gen-session.ts";
-import { LoginRequest, RPC2Response } from "./rpc2.d.ts";
+import { LoginRequest, RPC2Request, RPC2Response } from "./rpc2.d.ts";
 
 const local_username = "ademir";
 const local_password = "senha";
@@ -79,4 +79,16 @@ export async function LoginMiddleware(ctx: Context) {
         ctx.response.body = response;
         return;
     }
+}
+
+export async function RPC2Middleware(ctx:Context) {
+    const req_body: RPC2Request<unknown> = await ctx.request.body.json();
+    if (!req_body.session || !validSessions.has(req_body.session)) {
+        // handle invalid or non-existent session body
+        ctx.response.body = {result: false} as RPC2Response<null>
+        return;
+    }
+
+    // switch 
+    req_body.method;
 }

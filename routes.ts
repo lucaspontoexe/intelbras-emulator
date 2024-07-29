@@ -1,5 +1,6 @@
 import { Router } from "@oak/oak";
 import { LoginMiddleware } from "./rpc2-login.ts";
+import { RPC2Response } from "./rpc2.d.ts";
 
 export const router = new Router();
 
@@ -13,7 +14,6 @@ router.get(
 );
 
 router.post("/RPC2", (ctx) => {
-    // criar um middleware pra ver se tá tudo certo com
-    // login / sessão / timeout
-    ctx.response.body = "rpc2";
+    // not implemented (por enquanto)
+    ctx.response.body = {result: true, params: {},} as RPC2Response<unknown>;
 });
