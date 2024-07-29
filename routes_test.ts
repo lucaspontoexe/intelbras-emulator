@@ -1,3 +1,12 @@
-import { testing } from "@oak/oak";
+import { Application } from "@oak/oak";
 import { router } from "./routes.ts";
-import { createMockContext } from "jsr:@oak/oak@^16.1.0/testing";
+import { superoak } from "superoak";
+
+const app = new Application();
+app.use(router.routes());
+
+Deno.test("o get request funciona", async () => {
+    const request = await superoak(app);
+    await request.get("/").expect("tem");
+});
+

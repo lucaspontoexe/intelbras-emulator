@@ -3,6 +3,7 @@
     "dev": "deno run --watch main.ts"
   },
   "imports": {
-    "@oak/oak": "jsr:@oak/oak@^16.1.0"
+    "@oak/oak": "jsr:@oak/oak@^16.1.0",
+    "superoak": "https://deno.land/x/superoak@4.8.1/mod.ts"
   }
 }
