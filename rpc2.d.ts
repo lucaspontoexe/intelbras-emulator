@@ -2,7 +2,7 @@ export interface RPC2Request<Params> {
     method: string;
     params: Params;
     id: number;
-    session: string;
+    session?: string;
 }
 
 export interface RPC2Response<Params> {
@@ -23,4 +23,4 @@ interface LoginParams {
     loginType: "Direct";
 }
 
-type LoginRequest = RPC2Request<LoginParams>;
+export type LoginRequest = RPC2Request<LoginParams>;

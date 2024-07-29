@@ -7,4 +7,4 @@ choose one number of selected range
 
 [48,57], [65,90], [97,122]
 
-String.fromCharCode(...numbers)
+String.fromCharCode(...numbers) // array containing 26 numbers

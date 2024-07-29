@@ -5,8 +5,19 @@ export const router = new Router();
 
 router.get("/", (ctx) => ctx.response.body = "tem");
 
+// mover pra outro arquivo?
+function generateSession() {
+    const bytes = new Int8Array(26);
+    crypto.getRandomValues(bytes);
+    return bytes.toString();
+}
+
 router.post("/RPC2_Login", async (ctx) => {
     const { params, id }: LoginRequest = await ctx.request.body.json();
+
+    // hardcoded pro teste
+    const _username = "ademir";
+    const _password = "senha";
 
     // LOGIN 1
     if (!params.password) {
@@ -32,7 +43,7 @@ router.post("/RPC2_Login", async (ctx) => {
             params: responseParams,
             id,
             // generate and store session
-            session: "abcxyz789",
+            session: generateSession(),
         };
         ctx.response.body = response;
         return;
