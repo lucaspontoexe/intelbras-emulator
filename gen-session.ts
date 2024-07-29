@@ -29,3 +29,5 @@ export function makePWHash(...input: string[]) {
         md5.update(str).toString("hex").toUpperCase();
     return hex_md5(input.join(":"));
 }
+
+if (import.meta.main) console.log(makePWHash("salada", "balada"))
