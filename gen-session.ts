@@ -30,4 +30,4 @@ export function makePWHash(...input: string[]) {
     return hex_md5(input.join(":"));
 }
 
-if (import.meta.main) console.log(makePWHash("salada", "balada"))
+if (import.meta.main) console.log(makePWHash("salada", "balada"));

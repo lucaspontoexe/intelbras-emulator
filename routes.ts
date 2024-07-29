@@ -15,5 +15,5 @@ router.get(
 
 router.post("/RPC2", (ctx) => {
     // not implemented (por enquanto)
-    ctx.response.body = {result: true, params: {},} as RPC2Response<unknown>;
+    ctx.response.body = { result: true, params: {} } as RPC2Response<unknown>;
 });
