@@ -1,16 +1,10 @@
 import { Router } from "@oak/oak";
 import { LoginRequest, RPC2Response } from "./rpc2.d.ts";
+import { generateSessionToken } from "./gen-session.ts";
 
 export const router = new Router();
 
 router.get("/", (ctx) => ctx.response.body = "tem");
-
-// mover pra outro arquivo?
-function generateSession() {
-    const bytes = new Int8Array(26);
-    crypto.getRandomValues(bytes);
-    return bytes.toString();
-}
 
 router.post("/RPC2_Login", async (ctx) => {
     const { params, id }: LoginRequest = await ctx.request.body.json();
@@ -43,7 +37,7 @@ router.post("/RPC2_Login", async (ctx) => {
             params: responseParams,
             id,
             // generate and store session
-            session: generateSession(),
+            session: generateSessionToken(),
         };
         ctx.response.body = response;
         return;
