@@ -43,12 +43,11 @@ export async function LoginMiddleware(ctx: Context) {
         // 2nd login. get session
         const session_vars = sessions.get(req_body.session!);
         if (typeof session_vars === "undefined") {
-            ctx.response.body =
-                ({
-                    result: false,
-                    error: { code: -2, message: "session invalid etc" },
-                    id: req_body.id
-                }) as RPC2Response<null>;
+            ctx.response.body = ({
+                result: false,
+                error: { code: -2, message: "session invalid etc" },
+                id: req_body.id,
+            }) as RPC2Response<null>;
             return;
         }
 
@@ -81,14 +80,20 @@ export async function LoginMiddleware(ctx: Context) {
     }
 }
 
-export async function RPC2Middleware(ctx:Context) {
+export async function RPC2Middleware(ctx: Context) {
     const req_body: RPC2Request<unknown> = await ctx.request.body.json();
     if (!req_body.session || !validSessions.has(req_body.session)) {
         // handle invalid or non-existent session body
-        ctx.response.body = {result: false} as RPC2Response<null>
+        ctx.response.body = { result: false } as RPC2Response<null>;
         return;
     }
 
-    // switch 
+    // switch
     req_body.method;
+    /**
+     *  - devVideoInput.adjustFocus
+        - devVideoInput.autoFocus
+        - devVideoInput.getFocusStatus
+        - global.keepAlive
+     */
 }
