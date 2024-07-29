@@ -8,6 +8,7 @@ router.get("/", (ctx) => ctx.response.body = "tem");
 router.post("/RPC2_Login", async (ctx) => {
     const { params, id }: LoginRequest = await ctx.request.body.json();
 
+    // LOGIN 1
     if (!params.password) {
         // response params: generate random uuid
         // create session (26 random A-z 0-9 chars)
@@ -35,6 +36,8 @@ router.post("/RPC2_Login", async (ctx) => {
         };
         ctx.response.body = response;
         return;
+
+        // LOGIN 2
     } else {
         // check if hashing is correct
         // o código pra isso tem lá no cliente
@@ -43,10 +46,12 @@ router.post("/RPC2_Login", async (ctx) => {
 
     ctx.response.body = "rpc2 login";
 });
+
 router.get(
     "/RPC2_Notify_Method",
     (ctx) => ctx.response.body = { "NotifyMethod": "1.0" },
 );
+
 router.post("/RPC2", (ctx) => {
     // criar um middleware pra ver se tá tudo certo com
     // login / sessão / timeout
