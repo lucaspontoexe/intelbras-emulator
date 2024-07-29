@@ -71,7 +71,7 @@ export async function LoginMiddleware(ctx: Context) {
             result: true,
             params: { keepAliveInterval: 30 },
             id: req_body.id,
-            session: await ctx.cookies.get("DhWebClientSessionID") as string,
+            session: req_body.session!,
         };
         ctx.response.body = response;
         return;
