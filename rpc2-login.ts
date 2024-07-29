@@ -91,15 +91,6 @@ export async function RPC2Middleware(ctx: Context) {
         return;
     }
 
-    // switch
-    req_body.method;
-    /**
-     *  - devVideoInput.adjustFocus
-        - devVideoInput.autoFocus
-        - devVideoInput.getFocusStatus
-        - global.keepAlive
-     */
-
     switch (req_body.method) {
         case "devVideoInput.getFocusStatus":
             // get current zoom/focus value;
