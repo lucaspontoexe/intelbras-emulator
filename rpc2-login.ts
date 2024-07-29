@@ -10,8 +10,11 @@ interface Session {
     random: string;
 }
 const sessions = new Map<string, Session>();
-
 const validSessions = new Set<string>();
+
+// TODO: pegar os valores certinho lá nos logs
+const _zoomSteps = 2000;
+const _focusSteps = 2000;
 
 export async function LoginMiddleware(ctx: Context) {
     const session = generateSessionToken();
@@ -96,4 +99,40 @@ export async function RPC2Middleware(ctx: Context) {
         - devVideoInput.getFocusStatus
         - global.keepAlive
      */
+
+    switch (req_body.method) {
+        case "devVideoInput.getFocusStatus":
+            // get current zoom/focus value;
+            // if timeout/lerping is active, status is "autofocus"
+            // format body params, get types etc
+            break;
+
+        case "devVideoInput.adjustFocus":
+            /**
+             * call lerpzoom function,
+             * create timeouts
+             * format body etc
+             */
+            break;
+
+        case "devVideoInput.autoFocus":
+            // por enquanto é not-implemented
+            break;
+
+        case "global.keepAlive":
+            // aí tem interação com o rpc login
+            // a gente ainda não implementou a lógica do keepAlive
+            // então eu acho que dá pra fazer uma resposta dummy mesmo
+            break;
+
+        default:
+            ctx.response.body = {
+                result: false,
+                error: { code: -3, message: "not implemented" },
+                params: {},
+                id: req_body.id,
+                session: req_body.session,
+            } as RPC2Response<never>;
+            break;
+    }
 }

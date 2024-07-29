@@ -21,9 +21,9 @@ export function generateSessionToken(length = 26) {
 /**
  * make password hash
  * @param  {...string} input
- * @returns
+ * @returns {string} an md5-uppercase of input elements concatenated with a ":"
  */
-export function makePWHash(...input: string[]) {
+export function makePWHash(...input: string[]): string {
     const md5 = new Md5();
     const hex_md5 = (str: string) =>
         md5.update(str).toString("hex").toUpperCase();
