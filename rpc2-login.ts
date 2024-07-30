@@ -1,4 +1,4 @@
-import { Context, Next } from "@oak/oak";
+import { Context } from "@oak/oak";
 import { generateSessionToken, makePWHash } from "./gen-session.ts";
 import { LoginRequest, RPC2Request, RPC2Response } from "./rpc2.d.ts";
 import { GetFocusStatusResponseParams } from "./zoom.d.ts";
@@ -13,9 +13,8 @@ interface Session {
 const sessions = new Map<string, Session>();
 const validSessions = new Set<string>();
 
-// TODO: pegar os valores certinho lá nos logs
-const _zoomSteps = 2000;
-const _focusSteps = 2000;
+const zoomMotorSteps = 2259;
+const focusMotorSteps = 2750;
 
 export async function LoginMiddleware(ctx: Context) {
     const session = generateSessionToken();
@@ -84,26 +83,37 @@ export async function LoginMiddleware(ctx: Context) {
     }
 }
 
-export async function CheckSession(ctx: Context, next: Next) {
-    const shouldCheck = ctx.request.url.pathname === "/RPC2";
+// export async function CheckSession(ctx: Context, next: Next) {
+//     const shouldCheck = ctx.request.url.pathname === "/RPC2";
+//     const req_body: RPC2Request<unknown> = await ctx.request.body.json();
+//     const sessionIsInvalid = !req_body.session ||
+//         !validSessions.has(req_body.session);
+
+//     if (shouldCheck && sessionIsInvalid) {
+//         console.log("abriram sessão inválida aqui");
+//         // handle invalid or non-existent session
+//         ctx.response.body = { result: false } as RPC2Response<null>;
+//         return;
+//     }
+//     // aqui também seria espaço pra checar o keepAlive
+//     // se a sessão não expirou
+//     await next();
+// }
+
+export async function RPC2Middleware(ctx: Context) {
     const req_body: RPC2Request<unknown> = await ctx.request.body.json();
+    let response: RPC2Response<unknown>;
+
+    // check for invalid session token
     const sessionIsInvalid = !req_body.session ||
         !validSessions.has(req_body.session);
 
-    if (shouldCheck && sessionIsInvalid) {
+    if (sessionIsInvalid) {
         console.log("abriram sessão inválida aqui");
         // handle invalid or non-existent session
         ctx.response.body = { result: false } as RPC2Response<null>;
         return;
     }
-    // aqui também seria espaço pra checar o keepAlive
-    // se a sessão não expirou
-    await next();
-}
-
-export async function RPC2Middleware(ctx: Context) {
-    const req_body: RPC2Request<unknown> = await ctx.request.body.json();
-    let response: RPC2Response<unknown>;
 
     switch (req_body.method) {
         case "devVideoInput.getFocusStatus":
@@ -118,8 +128,8 @@ export async function RPC2Middleware(ctx: Context) {
                         Status: "Normal",
                         Zoom: 1000,
                         Focus: 1000,
-                        FocusMotorSteps: 2000,
-                        ZoomMotorSteps: 2500,
+                        FocusMotorSteps: focusMotorSteps,
+                        ZoomMotorSteps: zoomMotorSteps,
                         AutofocusPeak: 0,
                     },
                 },
