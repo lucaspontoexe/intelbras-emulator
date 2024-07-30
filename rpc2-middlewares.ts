@@ -83,23 +83,6 @@ export async function LoginMiddleware(ctx: Context) {
     }
 }
 
-// export async function CheckSession(ctx: Context, next: Next) {
-//     const shouldCheck = ctx.request.url.pathname === "/RPC2";
-//     const req_body: RPC2Request<unknown> = await ctx.request.body.json();
-//     const sessionIsInvalid = !req_body.session ||
-//         !validSessions.has(req_body.session);
-
-//     if (shouldCheck && sessionIsInvalid) {
-//         console.log("abriram sessão inválida aqui");
-//         // handle invalid or non-existent session
-//         ctx.response.body = { result: false } as RPC2Response<null>;
-//         return;
-//     }
-//     // aqui também seria espaço pra checar o keepAlive
-//     // se a sessão não expirou
-//     await next();
-// }
-
 export async function RPC2Middleware(ctx: Context) {
     const req_body: RPC2Request<unknown> = await ctx.request.body.json();
     let response: RPC2Response<unknown>;

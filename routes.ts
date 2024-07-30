@@ -1,5 +1,5 @@
 import { Router } from "@oak/oak";
-import { LoginMiddleware, RPC2Middleware } from "./rpc2-login.ts";
+import { LoginMiddleware, RPC2Middleware } from "./rpc2-middlewares.ts";
 
 export const router = new Router();
 
