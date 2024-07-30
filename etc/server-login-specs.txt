@@ -1,5 +1,0 @@
-login
-- server recebe e "valida" username
-- s. manda chaves aleatórias pro login challenge (parâmetros devem estar no body)
-
-- sever recebe parâmetros e valida se a hash da senha confere
