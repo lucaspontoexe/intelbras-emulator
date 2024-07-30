@@ -30,6 +30,6 @@ function lerp2(target: number, interval = 10) {
 
 if (import.meta.main) {
     number = 100;
-    console.log("will run");
-    lerp2(200).then(() => console.log("foi"));
+    console.log("running");
+    lerp2(200).then(() => console.log("done"));
 }
