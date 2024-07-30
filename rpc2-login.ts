@@ -126,8 +126,8 @@ export async function RPC2Middleware(ctx: Context) {
                 params: {
                     status: {
                         Status: "Normal",
-                        Zoom: 1000,
-                        Focus: 1000,
+                        Zoom: 1000 / zoomMotorSteps,
+                        Focus: 1000 / focusMotorSteps,
                         FocusMotorSteps: focusMotorSteps,
                         ZoomMotorSteps: zoomMotorSteps,
                         AutofocusPeak: 0,
