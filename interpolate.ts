@@ -13,8 +13,6 @@ export function lerpNumberAsync(limit = 100, interval = 10, increment = 1) {
     });
 }
 
-// todo: target, interval
-
 function lerp2(target: number, interval = 10) {
     const increment = (target - number >= 0) ? 1 : -1;
     return new Promise((resolve) => {
