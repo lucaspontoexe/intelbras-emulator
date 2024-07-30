@@ -1,4 +1,4 @@
-import { Context } from "@oak/oak";
+import { Context, Next } from "@oak/oak";
 import { generateSessionToken, makePWHash } from "./gen-session.ts";
 import { LoginRequest, RPC2Request, RPC2Response } from "./rpc2.d.ts";
 
@@ -83,13 +83,25 @@ export async function LoginMiddleware(ctx: Context) {
     }
 }
 
-export async function RPC2Middleware(ctx: Context) {
+export async function CheckSession(ctx: Context, next: Next) {
+    const shouldCheck = ctx.request.url.pathname === "/RPC2";
     const req_body: RPC2Request<unknown> = await ctx.request.body.json();
-    if (!req_body.session || !validSessions.has(req_body.session)) {
-        // handle invalid or non-existent session body
+    const sessionIsInvalid = !req_body.session ||
+        !validSessions.has(req_body.session);
+
+    if (shouldCheck && sessionIsInvalid) {
+        console.log("abriram sessão inválida aqui");
+        // handle invalid or non-existent session
         ctx.response.body = { result: false } as RPC2Response<null>;
         return;
     }
+    // aqui também seria espaço pra checar o keepAlive
+    // se a sessão não expirou
+    await next();
+}
+
+export async function RPC2Middleware(ctx: Context) {
+    const req_body: RPC2Request<unknown> = await ctx.request.body.json();
 
     switch (req_body.method) {
         case "devVideoInput.getFocusStatus":
