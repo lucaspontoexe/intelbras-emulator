@@ -1,7 +1,12 @@
 import { Context } from "@oak/oak";
 import { generateSessionToken, makePWHash } from "./gen-session.ts";
 import { LoginRequest, RPC2Request, RPC2Response } from "./rpc2.d.ts";
-import { GetFocusStatusResponseParams } from "./zoom.d.ts";
+import {
+    AdjustFocusRequest,
+    AdjustFocusResponse,
+    GetFocusStatusResponseParams,
+} from "./zoom.d.ts";
+import { getCameraData, setZoom } from "./camera.ts";
 
 const local_username = "ademir";
 const local_password = "senha";
@@ -32,8 +37,8 @@ export async function LoginMiddleware(ctx: Context) {
         const response: RPC2Response<typeof loginChallengeParams> = {
             result: false,
             error: {
-                "code": 268632079,
-                "message": "Component error: login challenge!",
+                code: 268632079,
+                message: "Component error: login challenge!",
             },
             params: loginChallengeParams,
             id: req_body.id,
@@ -46,11 +51,11 @@ export async function LoginMiddleware(ctx: Context) {
         // 2nd login. get session
         const session_vars = sessions.get(req_body.session!);
         if (typeof session_vars === "undefined") {
-            ctx.response.body = ({
+            ctx.response.body = {
                 result: false,
                 error: { code: -2, message: "session invalid etc" },
                 id: req_body.id,
-            }) as RPC2Response<null>;
+            } as RPC2Response<null>;
             return;
         }
 
@@ -65,7 +70,7 @@ export async function LoginMiddleware(ctx: Context) {
         if (!isPasswordCorrect) {
             // TODO: erro wrong password etc
             ctx.response.status = 401;
-            ctx.response.body = { "NotifyMethod": "1.0" };
+            ctx.response.body = { NotifyMethod: "1.0" };
             return;
         }
 
@@ -99,18 +104,18 @@ export async function RPC2Middleware(ctx: Context) {
     }
 
     switch (req_body.method) {
-        case "devVideoInput.getFocusStatus":
+        case "devVideoInput.getFocusStatus": {
             // get current zoom/focus value;
             // if tiimeout/lerping is active, status is "autofocus"
             // format body params, get types etc
-
+            const cameraData = getCameraData();
             response = {
                 result: true,
                 params: {
                     status: {
-                        Status: "Normal",
-                        Zoom: 1000 / zoomMotorSteps,
-                        Focus: 1000 / focusMotorSteps,
+                        Status: cameraData.isFocusing ? "Autofocus" : "Normal",
+                        Zoom: cameraData.zoom / zoomMotorSteps,
+                        Focus: cameraData.focus / focusMotorSteps,
                         FocusMotorSteps: focusMotorSteps,
                         ZoomMotorSteps: zoomMotorSteps,
                         AutofocusPeak: 0,
@@ -120,32 +125,28 @@ export async function RPC2Middleware(ctx: Context) {
                 session: req_body.session,
             } as RPC2Response<GetFocusStatusResponseParams>;
             break;
+        }
 
         case "devVideoInput.adjustFocus":
-            /**
-             * call lerpzoom function,
-             * create timeouts
-             * format body etc
-             */
-            response = { result: true, params: {} } as RPC2Response<
-                unknown
-            >;
+            setZoom((req_body as AdjustFocusRequest).params.zoom);
+            response = {
+                result: true,
+                params: null,
+                id: req_body.id,
+                session: req_body.session,
+            } as AdjustFocusResponse;
             break;
 
         case "devVideoInput.autoFocus":
             // por enquanto é not-implemented
-            response = { result: true, params: {} } as RPC2Response<
-                unknown
-            >;
+            response = { result: true, params: {} } as RPC2Response<unknown>;
             break;
 
         case "global.keepAlive":
             // aí tem interação com o rpc login
             // a gente ainda não implementou a lógica do keepAlive
             // então eu acho que dá pra fazer uma resposta dummy mesmo
-            response = { result: true, params: {} } as RPC2Response<
-                unknown
-            >;
+            response = { result: true, params: {} } as RPC2Response<unknown>;
             break;
 
         default:
