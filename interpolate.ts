@@ -1,3 +1,4 @@
+// unused
 let number = 0;
 
 export function lerpNumberAsync(limit = 100, interval = 10, increment = 1) {
