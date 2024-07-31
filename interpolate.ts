@@ -1,20 +1,10 @@
-// unused
 let number = 0;
 
-export function lerpNumberAsync(limit = 100, interval = 10, increment = 1) {
-    return new Promise((resolve) => {
-        const handle = setInterval(() => {
-            if (number >= limit) {
-                clearInterval(handle);
-                resolve(undefined);
-            }
-            console.log(number);
-            number += increment;
-        }, interval);
-    });
-}
+const _zoomMotorSteps = 2259;
+const _focusMotorSteps = 2750;
 
-function lerp2(target: number, interval = 10) {
+
+function _lerp2(target: number, interval = 10, onChange: (num: number) => number) {
     const increment = (target - number >= 0) ? 1 : -1;
     return new Promise((resolve) => {
         const handle = setInterval(() => {
@@ -23,14 +13,23 @@ function lerp2(target: number, interval = 10) {
                 clearInterval(handle);
                 resolve(undefined);
             }
-            console.log(number);
+            onChange(number);
             number += increment;
         }, interval);
     });
 }
 
-if (import.meta.main) {
-    number = 100;
-    console.log("running");
-    lerp2(200).then(() => console.log("done"));
+class _Camera {
+    zoom = 0;
+    focus = 0;
+    constructor() {
+        this.zoom = 0;
+        this.focus = 0;
+    }
 }
+
+// if (import.meta.main) {
+//     number = 100;
+//     console.log("running");
+//     lerp2(200).then(() => console.log("done"));
+// }
