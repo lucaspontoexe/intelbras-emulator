@@ -4,6 +4,8 @@ const zoomMotorSteps = 2259;
 const _focusMotorSteps = 2750;
 let isFocusing = false;
 
+const handles = new Set<number>();
+
 export function getCameraData() {
     return { zoom, focus, isFocusing };
 }
@@ -21,10 +23,20 @@ function interpolateZoom(target: number, interval = 1) {
     return new Promise((resolve) => {
         const handle = setInterval(() => {
             // maior ou menor dependendo da direção
-            if (zoom == Math.round(target) || isOutOfBounds) {
+            if (zoom == Math.round(target)) {
                 clearInterval(handle);
                 resolve(undefined);
+                handles.delete(handle);
             }
+
+            handles.add(handle);
+
+            if (isOutOfBounds) {
+                handles.forEach((handle) => clearInterval(handle));
+                handles.clear();
+                isFocusing = false;
+            }
+
             zoom += increment;
             focus = zoom * 0.8; // log function aqui
         }, interval);
