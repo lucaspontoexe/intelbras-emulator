@@ -16,11 +16,12 @@ export function setZoom(value: number) {
 
 function interpolateZoom(target: number, interval = 1) {
     const increment = target - zoom >= 0 ? 1 : -1;
+    const isOutOfBounds = zoom < 0 || zoom > zoomMotorSteps;
     console.log("interpolate from", zoom, "to", target);
     return new Promise((resolve) => {
         const handle = setInterval(() => {
             // maior ou menor dependendo da direção
-            if (zoom == Math.round(target)) {
+            if (zoom == Math.round(target) || isOutOfBounds) {
                 clearInterval(handle);
                 resolve(undefined);
             }
