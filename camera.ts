@@ -1,7 +1,7 @@
 let zoom = 1200;
 let focus = 1800;
 const zoomMotorSteps = 2259;
-const _focusMotorSteps = 2750;
+const focusMotorSteps = 2750;
 let isFocusing = false;
 
 const handles = new Set<number>();
@@ -27,7 +27,7 @@ function interpolateZoom(target: number, interval = 1) {
                 clearInterval(handle);
                 resolve(undefined);
                 handles.delete(handle);
-                zoom -= increment // fix off-by-one;
+                zoom -= increment; // fix off-by-one;
             }
 
             handles.add(handle);
@@ -39,7 +39,9 @@ function interpolateZoom(target: number, interval = 1) {
             }
 
             zoom += increment;
-            focus = zoom * 0.8; // log function aqui
+            // função quadrática enquanto a logarítmica não sai
+            const zoom01 = zoom / zoomMotorSteps;
+            focus = (2 * zoom01 * (1 - 0.5 * zoom01)) * focusMotorSteps;
         }, interval);
     });
 }
