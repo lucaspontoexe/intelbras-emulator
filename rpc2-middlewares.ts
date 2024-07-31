@@ -1,12 +1,8 @@
 import { Context } from "@oak/oak";
 import { generateSessionToken, makePWHash } from "./gen-session.ts";
 import { LoginRequest, RPC2Request, RPC2Response } from "./rpc2.d.ts";
-import {
-    AdjustFocusRequest,
-    AdjustFocusResponse,
-    GetFocusStatusResponseParams,
-} from "./zoom.d.ts";
-import { getCameraData, setZoom } from "./camera.ts";
+import { AdjustFocusRequest, AdjustFocusResponse, GetFocusStatusResponseParams, } from "./zoom.d.ts";
+import { getCameraData, setZoom, zoomMotorSteps, focusMotorSteps } from "./camera.ts";
 
 const local_username = "ademir";
 const local_password = "senha";
@@ -17,9 +13,6 @@ interface Session {
 }
 const sessions = new Map<string, Session>();
 const validSessions = new Set<string>();
-
-const zoomMotorSteps = 2259;
-const focusMotorSteps = 2750;
 
 export async function LoginMiddleware(ctx: Context) {
     const session = generateSessionToken();

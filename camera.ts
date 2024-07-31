@@ -1,7 +1,7 @@
 let zoom = 1200;
 let focus = 1800;
-const zoomMotorSteps = 2259;
-const focusMotorSteps = 2750;
+export const zoomMotorSteps = 2259;
+export const focusMotorSteps = 2750;
 let isFocusing = false;
 
 const handles = new Set<number>();
