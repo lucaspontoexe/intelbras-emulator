@@ -27,6 +27,7 @@ function interpolateZoom(target: number, interval = 1) {
                 clearInterval(handle);
                 resolve(undefined);
                 handles.delete(handle);
+                zoom -= increment // fix off-by-one;
             }
 
             handles.add(handle);
